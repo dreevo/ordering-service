@@ -1,0 +1,46 @@
+server:
+  port: 9002
+  shutdown: graceful
+  netty:
+    connection-timeout: 2s
+    idle-timeout: 15s
+
+spring:
+  application:
+    name: order-service
+  config:
+    import: "optional:configserver:"
+  cloud:
+    config:
+      uri: http://localhost:8888
+      request-connect-timeout: 5000
+      request-read-timeout: 5000
+      fail-fast: false
+      retry:
+        max-attempts: 6
+        initial-interval: 1000
+        max-interval: 2000
+        multiplier: 1.1
+  lifecycle:
+    timeout-per-shutdown-phase: 15s
+  r2dbc:
+    password: password
+    url: r2dbc:postgresql://localhost:5432/restaurantdb_order
+    pool:
+      max-size: 10
+      initial-size: 5
+      max-create-connection-time: 2s
+    username: user
+  flyway:
+    password: ${spring.r2dbc.password}
+    url: jdbc:postgresql://localhost:5432/restaurantdb_order
+    user: ${spring.r2dbc.username}
+restaurant:
+  tasty-service-uri: "http://localhost:9001"
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh
