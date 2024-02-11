@@ -27,6 +27,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 	implementation 'org.springframework.cloud:spring-cloud-starter-config'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation'org.springframework.cloud:spring-cloud-stream-binder-rabbit'
 	runtimeOnly 'org.postgresql:postgresql'
 	runtimeOnly 'org.postgresql:r2dbc-postgresql'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -40,6 +41,7 @@ dependencies {
 	runtimeOnly 'org.postgresql:postgresql'
 	runtimeOnly 'org.springframework:spring-jdbc'
 	testImplementation 'com.squareup.okhttp3:mockwebserver'
+	testImplementation("org.springframework.cloud:spring-cloud-stream-test-binder")
 }
 
 dependencyManagement {

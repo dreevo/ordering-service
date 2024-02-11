@@ -35,7 +35,7 @@ public class FoodClientTests {
 
 
     @Test
-    void whenBookExistsThenReturnBook() {
+    void whenFoodExistsThenReturnBook() {
         var foodRef = "1234567890";
         var mockResponse = new MockResponse().addHeader(HttpHeaders.CONTENT_TYPE,
                 MediaType.APPLICATION_JSON_VALUE).setBody(String.format("""
@@ -49,6 +49,21 @@ public class FoodClientTests {
         mockWebServer.enqueue(mockResponse);
         Mono<Food> food = foodClient.getFoodByRef(foodRef);
         StepVerifier.create(food).expectNextMatches(b -> b.ref().equals(foodRef)).verifyComplete();
+    }
+
+    @Test
+    void whenFoodNotExistsThenReturnEmpty() {
+        var foodRef = "1234567891";
+
+        var mockResponse = new MockResponse()
+                .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .setResponseCode(404);
+
+        mockWebServer.enqueue(mockResponse);
+
+        StepVerifier.create(foodClient.getFoodByRef(foodRef))
+                .expectNextCount(0)
+                .verifyComplete();
     }
 
 }

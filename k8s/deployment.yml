@@ -35,3 +35,5 @@ spec:
               value: r2dbc:postgresql://restaurant-postgres:5432/restaurantdb_order
             - name: RESTAURANT_TASTY_SERVICE_URI
               value: http://tasty-service
+            - name: SPRING_RABBITMQ_HOST
+              value: restaurant-rabbitmq
