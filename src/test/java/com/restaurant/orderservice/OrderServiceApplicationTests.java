@@ -47,7 +47,7 @@ class OrderServiceApplicationTests {
     private WebTestClient webTestClient;
 
     @MockBean
-    private FoodClient bookClient;
+    private FoodClient foodClient;
 
     @DynamicPropertySource
     static void postgresqlProperties(DynamicPropertyRegistry registry) {
@@ -66,7 +66,7 @@ class OrderServiceApplicationTests {
     void whenGetOrdersThenReturn() throws IOException {
         String foodRef = "1234567893";
         Food food = new Food(foodRef, "desc", "Mr Chef", 9.90);
-        given(bookClient.getFoodByRef(foodRef)).willReturn(Mono.just(food));
+        given(foodClient.getFoodByRef(foodRef)).willReturn(Mono.just(food));
         OrderRequest orderRequest = new OrderRequest(foodRef, 1);
         Order expectedOrder = webTestClient.post().uri("/orders")
                 .bodyValue(orderRequest)
@@ -86,10 +86,10 @@ class OrderServiceApplicationTests {
     }
 
     @Test
-    void whenPostRequestAndBookExistsThenOrderAccepted() throws IOException {
+    void whenPostRequestAndFoodExistsThenOrderAccepted() throws IOException {
         String foodRef = "1234567899";
         Food food = new Food(foodRef, "desc", "Mr Chef", 9.90);
-        given(bookClient.getFoodByRef(foodRef)).willReturn(Mono.just(food));
+        given(foodClient.getFoodByRef(foodRef)).willReturn(Mono.just(food));
         OrderRequest orderRequest = new OrderRequest(foodRef, 3);
 
         Order createdOrder = webTestClient.post().uri("/orders")
@@ -110,9 +110,9 @@ class OrderServiceApplicationTests {
     }
 
     @Test
-    void whenPostRequestAndBookNotExistsThenOrderRejected() {
+    void whenPostRequestAndFoodNotExistsThenOrderRejected() {
         String foodRef = "1234567894";
-        given(bookClient.getFoodByRef(foodRef)).willReturn(Mono.empty());
+        given(foodClient.getFoodByRef(foodRef)).willReturn(Mono.empty());
         OrderRequest orderRequest = new OrderRequest(foodRef, 3);
 
         Order createdOrder = webTestClient.post().uri("/orders")

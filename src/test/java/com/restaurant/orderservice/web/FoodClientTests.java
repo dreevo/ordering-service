@@ -35,7 +35,7 @@ public class FoodClientTests {
 
 
     @Test
-    void whenFoodExistsThenReturnBook() {
+    void whenFoodExistsThenReturnFood() {
         var foodRef = "1234567890";
         var mockResponse = new MockResponse().addHeader(HttpHeaders.CONTENT_TYPE,
                 MediaType.APPLICATION_JSON_VALUE).setBody(String.format("""
