@@ -30,20 +30,22 @@ public class OrderService {
         this.streamBridge = streamBridge;
     }
 
-    public Flux<Order> getAllOrders() {
-        return this.orderRepository.findAll();
+    public Flux<Order> getAllOrders(String userId) {
+        return orderRepository.findAllByCreatedBy(userId);
     }
 
 
-    public static Order buildRejectedOrder(String ref, int quantity) {
-        return Order.of(ref, null, quantity, null, OrderStatus.REJECTED);
-    }
+
 
     public Mono<Order> submitOrder(String ref, int quantity) {
         return foodClient.getFoodByRef(ref).map(food -> buildAcceptedOrder(food, quantity))
                 .defaultIfEmpty(buildRejectedOrder(ref, quantity))
                 .flatMap(orderRepository::save)
                 .doOnNext(this::publishOrderAcceptedEvent);
+    }
+
+    public static Order buildRejectedOrder(String ref, int quantity) {
+        return Order.of(ref, null, quantity, null, OrderStatus.REJECTED);
     }
 
     public static Order buildAcceptedOrder(Food food, int quantity) {
@@ -84,6 +86,8 @@ public class OrderService {
                 OrderStatus.DISPATCHED,
                 existingOrder.createdDate(),
                 existingOrder.lastModifiedDate(),
+                existingOrder.createdBy(),
+                existingOrder.lastModifiedBy(),
                 existingOrder.version()
         );
     }

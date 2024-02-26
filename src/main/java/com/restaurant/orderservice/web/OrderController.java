@@ -1,11 +1,19 @@
 package com.restaurant.orderservice.web;
 
+import javax.validation.Valid;
+
 import com.restaurant.orderservice.domain.Order;
 import com.restaurant.orderservice.domain.OrderService;
-import jakarta.validation.Valid;
-import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("orders")
@@ -18,16 +26,13 @@ public class OrderController {
     }
 
     @GetMapping
-    public Flux<Order> getAllOrders() {
-        return orderService.getAllOrders();
+    public Flux<Order> getAllOrders(@AuthenticationPrincipal Jwt jwt) {
+        return orderService.getAllOrders(jwt.getSubject());
     }
 
     @PostMapping
-    public Mono<Order> submitOrder(
-            @RequestBody @Valid OrderRequest orderRequest
-    ) {
-        return orderService.submitOrder(
-                orderRequest.ref(), orderRequest.quantity()
-        );
+    public Mono<Order> submitOrder(@RequestBody @Valid OrderRequest orderRequest) {
+        return orderService.submitOrder(orderRequest.ref(), orderRequest.quantity());
     }
+
 }

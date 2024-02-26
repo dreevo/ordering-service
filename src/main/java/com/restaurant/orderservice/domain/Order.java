@@ -1,10 +1,7 @@
 package com.restaurant.orderservice.domain;
 
 
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.annotation.Version;
+import org.springframework.data.annotation.*;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.time.Instant;
@@ -24,12 +21,19 @@ public record Order(
         Instant createdDate,
         @LastModifiedDate
         Instant lastModifiedDate,
+        @CreatedBy
+        String createdBy,
+
+        @LastModifiedBy
+        String lastModifiedBy,
+
         @Version
         int version
 
 
 ) {
     public static Order of(String foodRef, String foodDescription, Integer quantity, Double foodPrice, OrderStatus orderStatus) {
-        return new Order(null, foodRef, foodDescription, quantity, foodPrice, orderStatus, null, null, 0);
+        return new Order(null, foodRef, foodDescription, quantity, foodPrice, orderStatus,
+                null, null, null, null, 0);
     }
 }

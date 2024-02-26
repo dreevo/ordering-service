@@ -1,5 +1,6 @@
 package com.restaurant.orderservice.web;
 
+import com.restaurant.orderservice.config.SecurityConfig;
 import com.restaurant.orderservice.domain.Order;
 import com.restaurant.orderservice.domain.OrderService;
 import com.restaurant.orderservice.domain.OrderStatus;
@@ -7,6 +8,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder;
+import org.springframework.security.test.web.reactive.server.SecurityMockServerConfigurers;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
@@ -14,12 +19,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
 @WebFluxTest(OrderController.class)
+@Import(SecurityConfig.class)
 public class OrderControllerWebFluxTests {
 
     @Autowired
     private WebTestClient webClient;
     @MockBean
     private OrderService orderService;
+    @MockBean
+    ReactiveJwtDecoder reactiveJwtDecoder;
 
     @Test
     void whenFoodNotAvailableThenRejectOrder() {
@@ -30,6 +38,8 @@ public class OrderControllerWebFluxTests {
                 orderRequest.ref(), orderRequest.quantity())
         ).willReturn(Mono.just(expectedOrder));
         webClient
+                .mutateWith(SecurityMockServerConfigurers.mockJwt()
+                        .authorities(new SimpleGrantedAuthority("ROLE_customer")))
                 .post()
                 .uri("/orders")
                 .bodyValue(orderRequest)
