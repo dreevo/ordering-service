@@ -27,13 +27,13 @@ spring:
   cloud:
     config:
       uri: http://localhost:8888
-      request-connect-timeout: 5000 # 5s
-      request-read-timeout: 5000 # 5s
-      fail-fast: false # In production, set to true
+      request-connect-timeout: 5000 
+      request-read-timeout: 5000
+      fail-fast: false
       retry:
         max-attempts: 6
-        initial-interval: 1000 # 1s
-        max-interval: 2000 # 2s
+        initial-interval: 1000
+        max-interval: 2000
         multiplier: 1.1
     function:
       definition: dispatchOrder
@@ -62,3 +62,18 @@ spring:
           issuer-uri: http://localhost:8080/realms/restaurant
 restaurant:
   tasty-service-uri: "http://localhost:9001"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, prometheus
+  endpoint:
+    health:
+      show-details: always
+      show-components: always
+      probes:
+        enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}

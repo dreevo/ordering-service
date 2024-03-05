@@ -4,6 +4,8 @@ import javax.validation.Valid;
 
 import com.restaurant.orderservice.domain.Order;
 import com.restaurant.orderservice.domain.OrderService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class OrderController {
 
     private final OrderService orderService;
+    private static final Logger log = LoggerFactory.getLogger(OrderController.class);
 
     public OrderController(OrderService orderService) {
         this.orderService = orderService;
@@ -27,11 +30,13 @@ public class OrderController {
 
     @GetMapping
     public Flux<Order> getAllOrders(@AuthenticationPrincipal Jwt jwt) {
+        log.info("Fetching all orders");
         return orderService.getAllOrders(jwt.getSubject());
     }
 
     @PostMapping
     public Mono<Order> submitOrder(@RequestBody @Valid OrderRequest orderRequest) {
+        log.info("Order for {} copies of the food with ref {}", orderRequest.quantity(), orderRequest.ref());
         return orderService.submitOrder(orderRequest.ref(), orderRequest.quantity());
     }
 
