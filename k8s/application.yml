@@ -1,4 +1,4 @@
-polar:
+restaurant:
   tasty-service-uri: http://tasty-service
 spring:
   flyway:

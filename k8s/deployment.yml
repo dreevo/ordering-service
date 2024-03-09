@@ -39,10 +39,10 @@ spec:
               value: r2dbc:postgresql://restaurant-postgres:5432/restaurantdb_order
             - name: RESTAURANT_TASTY_SERVICE_URI
               value: http://tasty-service
-            - name: SPRING_RABBITMQ_HOST
+            - name: SPRING_RABBITMQ_  HOST
               value: restaurant-rabbitmq
             - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
-              value: http://polar-keycloak/realms/restaurant
+              value: http://restaurant-keycloak/realms/restaurant
           livenessProbe:
             httpGet:
               path: /actuator/health/liveness
