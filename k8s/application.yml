@@ -1,0 +1,14 @@
+polar:
+  tasty-service-uri: http://tasty-service
+spring:
+  flyway:
+    url: jdbc:postgresql://restaurant-postgres/restaurantdb_order
+  r2dbc:
+    url: r2dbc:postgresql://restaurant-postgres/restaurantdb_order
+  rabbitmq:
+    host: restaurant-rabbitmq
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://restaurant-keycloak/realms/restaurant

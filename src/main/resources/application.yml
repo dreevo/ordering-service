@@ -23,7 +23,7 @@ spring:
     password: ${spring.r2dbc.password}
     url: jdbc:postgresql://localhost:5432/restaurantdb_order
   config:
-    import: "optional:configserver:"
+    import: ""
   cloud:
     config:
       uri: http://localhost:8888
@@ -35,6 +35,7 @@ spring:
         initial-interval: 1000
         max-interval: 2000
         multiplier: 1.1
+      enabled: false
     function:
       definition: dispatchOrder
     stream:
